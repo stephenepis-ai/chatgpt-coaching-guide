@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatGPT 2026 — Coaching Guide</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: #080c14; color: #dde3ed; font-family: 'Segoe UI', system-ui, sans-serif; }
+  ::-webkit-scrollbar { height: 4px; width: 4px; }
+  ::-webkit-scrollbar-track { background: #0a0f1a; }
+  ::-webkit-scrollbar-thumb { background: #1e2d42; border-radius: 2px; }
+  textarea:focus, button:focus { outline: none; }
+  textarea { font-family: inherit; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+const ACCENT = "#22d3ee";
+const GOLD   = "#f59e0b";
+const PURPLE = "#a78bfa";
+const GREEN  = "#34d399";
+const PINK   = "#f472b6";
+const RED    = "#fb7185";
+
+const tabs = [
+  { id:"models",       label:"🧠 Models 2026"        },
+  { id:"tools",        label:"⚙️ Power Features"     },
+  { id:"agents",       label:"🤖 Agents & Research"   },
+  { id:"prompting",    label:"✍️ Prompting Up"        },
+  { id:"memory",       label:"🧩 Memory & Projects"   },
+  { id:"integrations", label:"🔌 Connectors"          },
+  { id:"plans",        label:"💳 Plans & Worth"       },
+  { id:"launcher",     label:"🚀 Build Your Own"      },
+];
+
+const sections = {
+  models:{
+    headline:"The entire model lineup changed in 2026",
+    subline:"GPT-4o is retired. Everything runs on GPT-5 now — and they simplified it.",
+    alert:"⚠️ If you read a ChatGPT guide from 2025, most of it is out of date. GPT-4o, o3, o4-mini — all retired from the consumer app.",
+    cards:[
+      { title:"GPT-5.5 Instant", tag:"Default — All Plans", color:GREEN,
+        desc:"The new default for everyone, including free users. Replaced GPT-5.3 Instant in May 2026. Faster, sharper, 30% more concise, and significantly fewer errors. This is what you're using when you open ChatGPT and just start typing.",
+        tip:"You don't have to pick this — it's already on. Everyday writing, analysis, Q&A, summaries — this handles all of it confidently." },
+      { title:"GPT-5.4 Thinking", tag:"Plus / Pro — Paid Only", color:PURPLE,
+        desc:"The reasoning model for harder problems. Takes longer but thinks step-by-step. 33% fewer factual errors than its predecessor, 256K token context window. You can see it thinking mid-response, and even steer it before it finishes.",
+        tip:"Switch to Thinking for: complex decisions, multi-variable problems, important documents, anything where getting it right matters more than speed." },
+      { title:"GPT-5.4 Pro", tag:"Pro Plan Only", color:GOLD,
+        desc:"Research-grade intelligence for the hardest tasks. 400K token context window. Thinking-time controls from Light to Heavy. Built for agentic workflows, financial modelling, long-running complex tasks.",
+        tip:"Unless you're doing deep professional research daily, Plus covers 90% of needs. Pro is for power users who rely on it all day." },
+      { title:"The Model Picker Simplified", tag:"How It Works Now", color:ACCENT,
+        desc:"OpenAI cleaned up the confusing menu. Instead of a dozen named models, you now choose: Instant (fast, default), Thinking (deeper reasoning), or Pro (research-grade). ChatGPT also auto-routes — if your question is complex, it switches to Thinking automatically.",
+        tip:"You no longer need to know which model to pick for most tasks. For anything important or complex, manually switch to Thinking." },
+      { title:"What's Retired", tag:"Gone from Consumer App", color:RED,
+        desc:"GPT-4o, GPT-4.1, GPT-4.5, o1, o3, o4-mini — all removed from the ChatGPT model picker as of early 2026. If a blog post recommends 'GPT-4o for reasoning' — that article is outdated.",
+        tip:"Don't worry about what you're missing. GPT-5.5 Instant is more capable than GPT-4o was at its best. The retirement is an upgrade, not a loss." },
+    ]
+  },
+  tools:{
+    headline:"Built-in tools that changed what ChatGPT can do",
+    subline:"These aren't add-ons — they're woven into the experience. Most people don't use half of them.",
+    cards:[
+      { title:"Canvas", tag:"Writing & Code Workspace", color:ACCENT,
+        desc:"A split-screen editor where you write or code on one side and ChatGPT edits alongside you in real-time. Better than chat for anything you're building or refining.",
+        tip:"Stop iterating in chat for important documents. Open Canvas for any CV, proposal, article, or piece of code you'll work on more than once." },
+      { title:"Image Generation (DALL·E)", tag:"Built-in on Plus/Pro", color:PINK,
+        desc:"Create images directly in the chat window. Logos, illustrations, social graphics, mockups. Describe what you want and it generates. Iterate and refine in the same conversation.",
+        tip:"Try: 'Create a professional header image for a LinkedIn article about AI in the workplace. Clean, modern, dark blue palette, abstract data visual.'" },
+      { title:"File & Document Reading", tag:"All Paid Plans", color:GREEN,
+        desc:"Upload PDFs, Word docs, Excel files, PowerPoints. ChatGPT reads and analyses them — summarises, extracts key data, spots patterns, answers questions about the content.",
+        tip:"Try: Upload a competitor's brochure and ask 'What are the 5 key points and what's missing from this?'" },
+      { title:"Data Analysis", tag:"Code Interpreter", color:GOLD,
+        desc:"Upload a spreadsheet and ask it to find trends, build charts, clean messy data, or run calculations. It writes code behind the scenes. No coding knowledge needed.",
+        tip:"Try: 'Here's my sales data — show me which product category is growing fastest, and create a chart.'" },
+      { title:"Web Browsing", tag:"Real-time Search", color:ACCENT,
+        desc:"ChatGPT searches the web for current information. Prices, news, recent research, competitor info. The base model's knowledge has a cutoff — browse mode fills that gap.",
+        tip:"Enable Browse for: market research, competitor analysis, anything recent, or current pricing on tools and services." },
+      { title:"Voice Mode", tag:"Mobile + Desktop", color:PURPLE,
+        desc:"Have a real spoken conversation with ChatGPT. Not just speech-to-text — it responds naturally, handles back-and-forth. Advanced Voice Mode supports real-time interruptions.",
+        tip:"Use it while walking to think through a business problem out loud. Or to rehearse a sales call. Or to review a draft by listening back." },
+    ]
+  },
+  agents:{
+    headline:"ChatGPT can now work for you, not just with you",
+    subline:"These modes turn ChatGPT into something closer to an autonomous assistant.",
+    cards:[
+      { title:"Deep Research", tag:"Plus: 10/month — Pro: Unlimited", color:GOLD,
+        desc:"You give it a topic. It browses dozens of sources, synthesises everything, and returns a structured research report with citations. Takes 5–30 minutes. Can connect to MCP apps and your own trusted data sources.",
+        tip:"Use for: competitor analysis, market sizing, background on a new client, building briefing documents. This is a serious time-saver for any knowledge worker." },
+      { title:"Agent Mode", tag:"Plus / Pro", color:PURPLE,
+        desc:"ChatGPT takes a goal and works through multiple steps autonomously — browsing, running code, reading files, creating documents — without you prompting each step.",
+        tip:"Start simple: 'Research the top 5 AI consulting firms in the UK and create a comparison table with services, pricing model, and target client size.'" },
+      { title:"Operator (Computer Use)", tag:"Pro — Beta", color:RED,
+        desc:"ChatGPT can control a computer — clicking, typing, navigating websites, filling forms. Still in beta. Functional for many browsing tasks.",
+        tip:"Best for: low-stakes browsing tasks, form filling, gathering info from specific sites. Treat failures as expected — it's still maturing." },
+      { title:"Codex (Agentic Coding)", tag:"Plus / Pro", color:ACCENT,
+        desc:"A specialist AI agent for software engineering. Reads codebases, writes and runs tests, proposes changes, and can submit pull requests — all autonomously.",
+        tip:"Even if you don't code: knowing Codex exists means you can have intelligent conversations about building AI-powered tools — a real consulting advantage." },
+      { title:"Record Mode", tag:"Meeting Intelligence", color:GREEN,
+        desc:"ChatGPT listens to meetings, calls, or conversations and produces summaries, action items, and key decisions.",
+        tip:"Use after any important call: get a clean summary with actions, decisions, and open questions. Saves hours of note-taking weekly." },
+      { title:"Interactive Learning Mode", tag:"Education Tool", color:PINK,
+        desc:"A structured learning mode where ChatGPT teaches rather than just answers — asking questions, checking understanding, providing feedback, adapting to your level.",
+        tip:"Try: 'Teach me the basics of contract law as it applies to freelance consulting in the UK. Ask me questions as you go to check I'm following.'" },
+    ]
+  },
+  prompting:{
+    headline:"Stop searching. Start directing.",
+    subline:"The gap between a mediocre answer and a great one is almost always how you asked.",
+    cards:[
+      { title:"Give It a Role", tag:"Instant upgrade", color:PURPLE,
+        desc:"Open with who it should be. 'Act as a senior marketing strategist...' This shapes every response that follows and lifts quality immediately.",
+        tip:"Example: 'You are an experienced AI strategy consultant who specialises in helping SMEs adopt AI tools practically. My client runs a 12-person accountancy firm.'" },
+      { title:"Add Your Actual Context", tag:"Critical", color:GREEN,
+        desc:"Generic questions get generic answers. Give it your real situation — your constraints, your goals, your audience, your existing resources.",
+        tip:"Bad: 'Write me a proposal.' Better: 'Write a 1-page consulting proposal for a 3-day AI readiness workshop for a 50-person logistics company. Include objectives, deliverables, and a day-by-day outline.'" },
+      { title:"Specify the Output Format", tag:"Saves time", color:GOLD,
+        desc:"Tell it exactly what you want back — a table, bullet list, 3-paragraph email, 10-slide outline. Without this it guesses — and usually guesses wrong.",
+        tip:"End your prompt with: '...give me this as a table' or '...as a draft email I can send directly' or '...as a numbered action plan with one sentence per step.'" },
+      { title:"Iterate, Don't Restart", tag:"Power move", color:ACCENT,
+        desc:"Most people throw away a bad answer and rephrase. Instead: reply to it. 'Make it shorter.' 'Less formal.' 'The third point is wrong — remove it.'",
+        tip:"Think of it like working with a person. You wouldn't send a new brief every time — you'd just say 'actually, change this bit.'" },
+      { title:"The Critique Trick", tag:"Quality check", color:RED,
+        desc:"After it produces something, ask: 'What are the weaknesses in this?' or 'What would a sceptical client say?' It'll honestly critique its own work.",
+        tip:"Use before sending important proposals or pitches. It's like a free second opinion from someone who isn't protecting your ego." },
+      { title:"Custom Instructions", tag:"Set once, always on", color:PINK,
+        desc:"In Settings → Personalisation → Custom Instructions, tell ChatGPT who you are and how you want it to respond — permanently. Every future conversation starts smarter.",
+        tip:"Include: profession, goals, preferred tone. E.g. 'I'm an AI consultant, 50, rebuilding my career. Direct responses, no padding, UK English.'" },
+    ]
+  },
+  memory:{
+    headline:"Making ChatGPT remember you across everything",
+    subline:"By default, each new chat starts blank. These are the tools that fix that.",
+    cards:[
+      { title:"Persistent Memory", tag:"Plus / Pro — On by Default", color:GREEN,
+        desc:"ChatGPT saves facts about you across conversations — your name, job, preferences, projects. The longer you use it, the more personalised responses become.",
+        tip:"Seed it deliberately: 'Remember that I'm an AI consultant, I work with non-technical clients, and I prefer bullet points for lists but prose for explanations.'" },
+      { title:"Projects", tag:"Plus / Pro", color:PURPLE,
+        desc:"Persistent workspaces where context carries across all chats. Set standing instructions, upload files. Deep Research, Voice, and Memory all work inside Projects.",
+        tip:"Create a Project for each major focus: your consulting business, each ongoing client. Pick up exactly where you left off every time." },
+      { title:"Project File Context", tag:"Upgraded 2026", color:GOLD,
+        desc:"Upload documents to a Project and ChatGPT references them across every conversation — your CV, service offerings, client brief — without re-uploading each time.",
+        tip:"Create a 'My Business' Project, upload your CV, a one-page bio, and your service menu. Every chat in that project knows exactly who you are." },
+      { title:"Memory vs History", tag:"Important distinction", color:ACCENT,
+        desc:"Memory (facts it saves about you) and Chat History (record of past conversations) are different. Memory is active context. History is a searchable archive.",
+        tip:"For anything you're building over time — use Projects. Don't rely on chat history as working memory." },
+      { title:"Temporary Chats", tag:"Privacy option", color:RED,
+        desc:"Nothing saved to history, nothing updates memory, doesn't appear in your account record.",
+        tip:"Good practice for anything involving client confidential information or personal topics you don't want stored." },
+    ]
+  },
+  integrations:{
+    headline:"Connecting ChatGPT to your real-world tools",
+    subline:"60+ app connectors now available. ChatGPT can pull from and push to the tools you already use.",
+    cards:[
+      { title:"Native App Connectors (60+)", tag:"2026 — New", color:ACCENT,
+        desc:"Direct connectors to Google Drive, Dropbox, Notion, Slack, Asana, GitHub, Zapier, and 50+ more. Connect in Settings → Connected Apps.",
+        tip:"Connect Google Drive and ask: 'Summarise all documents tagged with [client name] and pull out any outstanding action items.'" },
+      { title:"MCP (Model Context Protocol)", tag:"Advanced", color:PURPLE,
+        desc:"The standard that lets ChatGPT connect to virtually any tool — databases, internal systems, custom apps. Deep Research can restrict searches to your own trusted data sources.",
+        tip:"When a client asks 'can it connect to our CRM?' — the answer is almost certainly yes with MCP." },
+      { title:"Zapier + Make", tag:"No-code automation", color:GOLD,
+        desc:"Zapier connects ChatGPT to thousands of apps through automated workflows. Make (formerly Integromat) is more powerful for complex multi-step flows.",
+        tip:"Start with one workflow: every new email from a lead gets sent through ChatGPT to summarise and suggest a reply. Real time saved, every day." },
+      { title:"Microsoft Copilot", tag:"Office 365 / Work", color:ACCENT,
+        desc:"GPT-5 is built into Word, Excel, PowerPoint, Outlook, and Teams via Microsoft Copilot.",
+        tip:"For clients who use Microsoft 365: Copilot is often the most practical AI recommendation. It enhances the tools they already use." },
+      { title:"Custom GPTs", tag:"Build Your Own", color:GREEN,
+        desc:"Build your own ChatGPT — custom instructions, your own documents, a specific purpose. Share publicly, with clients, or keep private. No coding required.",
+        tip:"Build a GPT that knows your services, your CV, your pricing — share the link with potential clients. It's a live, interactive portfolio piece." },
+      { title:"Browser Extensions", tag:"Everywhere else", color:PINK,
+        desc:"Tools like Sider and MaxAI put AI into your browser — highlight text on any webpage and immediately summarise, rewrite, or extract key points.",
+        tip:"Great for research workflows. Instead of copying text into ChatGPT, you interact with web content directly." },
+    ]
+  },
+  plans:{
+    headline:"Which plan is actually worth it?",
+    subline:"Plain English breakdown — no marketing speak.",
+    cards:[
+      { title:"Free Plan", tag:"£0 / month", color:GREEN,
+        desc:"GPT-5.5 Instant (limited ~10 messages per 5 hours). No Thinking mode, no Deep Research, no Projects, no persistent memory.",
+        tip:"Good for trying it out. Not good enough for regular professional use. If you're using it for work — upgrade." },
+      { title:"Plus Plan", tag:"~£20/month — The Sweet Spot", color:GOLD,
+        desc:"Full GPT-5.5 Instant + GPT-5.4 Thinking. Deep Research (10/month). Projects. Persistent memory. Agent Mode. 160 messages per 3 hours. Image generation. Canvas.",
+        tip:"The right plan for most professionals. £20/month pays for itself in the first hour of time saved. Start here." },
+      { title:"Pro Plan", tag:"~£200/month", color:PURPLE,
+        desc:"Everything in Plus, plus GPT-5.4 Pro, unlimited messages, unlimited Deep Research, maximum memory and context, expanded Codex agent, Operator access.",
+        tip:"Worth it for complex research workflows or building products on ChatGPT. For most consultants starting out — Plus is enough." },
+      { title:"Team / Business Plan", tag:"Per seat pricing", color:ACCENT,
+        desc:"Shared workspaces, admin controls, business-level data privacy — your chats don't train OpenAI's models.",
+        tip:"When advising a business client: Team or Business is the right recommendation. Consumer Plus accounts aren't suitable for most business data." },
+      { title:"Enterprise / Edu", tag:"Custom pricing", color:RED,
+        desc:"Maximum security, compliance controls, SSO, custom data retention. GPT-5.4 Pro is the default model.",
+        tip:"Knowing this tier exists matters for consulting conversations. 'Can ChatGPT work with our compliance requirements?' — Enterprise is the answer." },
+      { title:"The Honest Verdict", tag:"Start here", color:PINK,
+        desc:"Free → Plus is the most important upgrade you can make. The difference in capability, context, and features is enormous.",
+        tip:"Start on Plus. Use it for 30 days — Projects, Deep Research, Thinking mode. After that you'll know exactly whether you need more." },
+    ]
+  },
+};
+
+const PROMPT_TEMPLATE = `Before building anything, use your web search tool to find the most current information on [TOPIC] — including latest versions, recent updates, and any new features released in the last 6 months. Then create an interactive React Artifact that [WHAT_IT_DOES] for [AUDIENCE]. Structure it with tabs so it's not overwhelming. Focus on practical use, not definitions. Every section should answer "what can I actually do with this today?" not "what is this?" Make it feel like a coaching resource, not a textbook.`;
+
+const EXAMPLES = [
+  { topic:"Notion AI", does:"explains all current AI features, automations, and integrations", audience:"freelancers and small business owners who already use Notion but haven't touched the AI features" },
+  { topic:"LinkedIn for professionals", does:"coaches on profile optimisation, content strategy, and outreach using AI tools", audience:"career changers and consultants building a new professional presence" },
+  { topic:"Microsoft Copilot in Office 365", does:"walks through practical use cases in Word, Excel, Outlook, and Teams", audience:"non-technical business users who want to use AI in their existing tools" },
+  { topic:"Midjourney and AI image generation", does:"covers prompting, styles, workflows, and commercial use", audience:"marketers and content creators with no design background" },
+  { topic:"Claude AI (Anthropic)", does:"explains features, models, Projects, and how it differs from ChatGPT", audience:"professionals who use ChatGPT and want to understand when Claude is better" },
+];
+
+function LauncherTab() {
+  const [topic, setTopic]     = useState("");
+  const [does, setDoes]       = useState("");
+  const [audience, setAudience] = useState("");
+  const [copied, setCopied]   = useState(false);
+  const [exIdx, setExIdx]     = useState(null);
+
+  const filled = topic.trim() && does.trim() && audience.trim();
+  const builtPrompt = PROMPT_TEMPLATE
+    .replace("[TOPIC]", topic.trim() || "[TOPIC]")
+    .replace("[WHAT_IT_DOES]", does.trim() || "[WHAT IT DOES]")
+    .replace("[AUDIENCE]", audience.trim() || "[WHO THE AUDIENCE IS]");
+
+  function loadEx(i) { setTopic(EXAMPLES[i].topic); setDoes(EXAMPLES[i].does); setAudience(EXAMPLES[i].audience); setExIdx(i); setCopied(false); }
+  function copy() { navigator.clipboard.writeText(builtPrompt).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2500); }); }
+
+  const inp = { width:"100%", background:"#0c1420", border:"1px solid #1e2d42", borderRadius:8, color:"#dde3ed", fontSize:13, padding:"10px 12px", fontFamily:"inherit", lineHeight:1.5, resize:"vertical", boxSizing:"border-box" };
+  const lbl = { fontSize:11, color:ACCENT, letterSpacing:"1.5px", textTransform:"uppercase", fontWeight:600, marginBottom:6, display:"block", fontFamily:"monospace" };
+
+  return (
+    <div>
+      <h2 style={{fontSize:"clamp(16px,3.5vw,22px)",fontWeight:600,margin:"0 0 6px",color:"#e8edf5"}}>Build a coaching tool for any AI topic</h2>
+      <p style={{fontSize:13,color:"#5a7090",margin:"0 0 20px",lineHeight:1.6}}>This prompt tells Claude to search for current information first, then build an up-to-date interactive coaching tool — just like this one. Fill in the three fields, copy the prompt, and paste it into a new Claude conversation.</p>
+
+      <div style={{background:"#0c1420",border:"1px solid #1e2d42",borderLeft:`3px solid ${PURPLE}`,borderRadius:8,padding:"14px 16px",marginBottom:24,display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:12}}>
+        {[{l:"Step 1",t:"Fill in the 3 fields below",c:ACCENT},{l:"Step 2",t:"Copy the generated prompt",c:PURPLE},{l:"Step 3",t:"Paste into a new Claude chat",c:GREEN}].map(s=>(
+          <div key={s.l} style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+            <span style={{background:s.c+"22",color:s.c,borderRadius:4,fontSize:10,fontWeight:700,padding:"2px 7px",letterSpacing:1,flexShrink:0}}>{s.l}</span>
+            <span style={{fontSize:12,color:"#8aaac8",lineHeight:1.5}}>{s.t}</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{marginBottom:20}}>
+        <span style={lbl}>Load an example</span>
+        <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+          {EXAMPLES.map((ex,i)=>(
+            <button key={i} onClick={()=>loadEx(i)} style={{background:exIdx===i?ACCENT+"22":"#0c1420",border:`1px solid ${exIdx===i?ACCENT+"60":"#1e2d42"}`,color:exIdx===i?ACCENT:"#5a7090",borderRadius:6,padding:"5px 12px",fontSize:12,cursor:"pointer"}}>{ex.topic}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{display:"flex",flexDirection:"column",gap:16,marginBottom:24}}>
+        <div><label style={lbl}>① Topic — what Claude should research first</label><textarea rows={2} placeholder="e.g. Notion AI, Microsoft Copilot, Midjourney..." value={topic} onChange={e=>{setTopic(e.target.value);setExIdx(null);}} style={inp}/></div>
+        <div><label style={lbl}>② What it does — the purpose of the tool</label><textarea rows={2} placeholder="e.g. explains all current features and integrations..." value={does} onChange={e=>{setDoes(e.target.value);setExIdx(null);}} style={inp}/></div>
+        <div><label style={lbl}>③ Audience — who it's built for</label><textarea rows={2} placeholder="e.g. non-technical business owners, freelancers..." value={audience} onChange={e=>{setAudience(e.target.value);setExIdx(null);}} style={inp}/></div>
+      </div>
+
+      <div style={{marginBottom:16}}>
+        <span style={lbl}>Your generated prompt</span>
+        <div style={{background:"#080c14",border:`1px solid ${filled?ACCENT+"40":"#1e2d42"}`,borderRadius:8,padding:"14px 16px",fontSize:12.5,color:filled?"#c8d8e8":"#3a5060",lineHeight:1.8,fontFamily:"monospace",whiteSpace:"pre-wrap",wordBreak:"break-word",minHeight:100}}>{builtPrompt}</div>
+      </div>
+
+      <button onClick={copy} disabled={!filled} style={{background:filled?(copied?GREEN+"22":`linear-gradient(135deg,${ACCENT}33,${PURPLE}33)`):"#0c1420",border:`1px solid ${filled?(copied?GREEN:ACCENT+"60"):"#1e2d42"}`,color:filled?(copied?GREEN:ACCENT):"#3a5060",borderRadius:8,padding:"11px 24px",fontSize:13,fontWeight:600,cursor:filled?"pointer":"not-allowed",display:"flex",alignItems:"center",gap:8}}>
+        <span>{copied?"✓":"⎘"}</span>{copied?"Copied — paste into Claude":filled?"Copy prompt to clipboard":"Fill in all three fields to generate"}
+      </button>
+
+      <div style={{marginTop:24,padding:"12px 16px",background:"#0a0f1a",border:"1px solid #1a2535",borderRadius:8,fontSize:12,color:"#445566",lineHeight:1.6}}>
+        <strong style={{color:"#5a7090"}}>Why this works:</strong> The prompt forces Claude to search for current information before building — so the output is based on what's true today, not training data that might be months out of date.
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [activeTab, setActiveTab] = useState("models");
+  const [expanded, setExpanded]   = useState(null);
+  const section    = sections[activeTab];
+  const isLauncher = activeTab === "launcher";
+
+  return (
+    <div style={{minHeight:"100vh",background:"#080c14",color:"#dde3ed"}}>
+      <div style={{background:"linear-gradient(160deg,#0d1220 0%,#111827 60%,#0d1220 100%)",borderBottom:"1px solid #1e2d42",padding:"28px 20px 20px"}}>
+        <div style={{maxWidth:880,margin:"0 auto"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10,flexWrap:"wrap"}}>
+            <span style={{background:"linear-gradient(90deg,#22d3ee,#a78bfa)",borderRadius:6,padding:"3px 12px",fontSize:10,letterSpacing:"2.5px",textTransform:"uppercase",color:"#080c14",fontWeight:700}}>Updated June 2026</span>
+            <span style={{fontSize:11,color:"#4a6080",fontFamily:"monospace"}}>GPT-5.5 · Agent Mode · Deep Research</span>
+          </div>
+          <h1 style={{fontSize:"clamp(20px,5vw,34px)",fontWeight:300,margin:"0 0 6px",color:"#f0f4fa",letterSpacing:"-0.5px",lineHeight:1.2}}>
+            ChatGPT in 2026:<br/>
+            <span style={{fontWeight:700,background:"linear-gradient(90deg,#22d3ee,#a78bfa)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Your Coaching Guide</span>
+          </h1>
+          <p style={{fontSize:13,color:"#5a7090",margin:0,fontStyle:"italic"}}>Beyond the basics — the tools, models, and moves that actually change what's possible.</p>
+        </div>
+      </div>
+
+      <div style={{background:"#0a0f1a",borderBottom:"1px solid #1a2535",overflowX:"auto"}}>
+        <div style={{display:"flex",padding:"0 16px",gap:2,maxWidth:880,margin:"0 auto",minWidth:"fit-content"}}>
+          {tabs.map(t=>(
+            <button key={t.id} onClick={()=>{setActiveTab(t.id);setExpanded(null);}} style={{background:"none",border:"none",borderBottom:activeTab===t.id?`2px solid ${t.id==="launcher"?GOLD:ACCENT}`:"2px solid transparent",color:activeTab===t.id?(t.id==="launcher"?GOLD:"#f0f4fa"):"#445566",padding:"12px 14px",cursor:"pointer",fontSize:12,fontWeight:activeTab===t.id?600:400,whiteSpace:"nowrap",flexShrink:0}}>{t.label}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{padding:"24px 16px 48px",maxWidth:880,margin:"0 auto"}}>
+        {isLauncher ? <LauncherTab/> : (
+          <>
+            <div style={{marginBottom:20}}>
+              <h2 style={{fontSize:"clamp(16px,3.5vw,22px)",fontWeight:600,margin:"0 0 6px",color:"#e8edf5",lineHeight:1.3}}>{section.headline}</h2>
+              <p style={{fontSize:13,color:"#5a7090",margin:"0 0 12px",lineHeight:1.5}}>{section.subline}</p>
+              {section.alert&&<div style={{background:"#1a1208",border:"1px solid #5a3800",borderLeft:`3px solid ${GOLD}`,borderRadius:8,padding:"10px 14px",fontSize:12,color:"#c49040",lineHeight:1.5}}>{section.alert}</div>}
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(255px,1fr))",gap:14}}>
+              {section.cards.map((card,i)=>{
+                const open=expanded===i;
+                return (
+                  <div key={i} onClick={()=>setExpanded(open?null:i)} style={{background:open?"#0f1828":"#0c1420",border:`1px solid ${open?card.color+"50":"#1a2535"}`,borderTop:`3px solid ${card.color+(open?"ff":"55")}`,borderRadius:10,padding:"16px 16px 14px",cursor:"pointer"}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+                      <span style={{background:card.color+"18",color:card.color,fontSize:9,padding:"2px 8px",borderRadius:4,fontWeight:600,letterSpacing:"0.8px",textTransform:"uppercase"}}>{card.tag}</span>
+                      <span style={{color:open?card.color:"#2a3d55",fontSize:20,lineHeight:1,transform:open?"rotate(45deg)":"none",fontWeight:200}}>+</span>
+                    </div>
+                    <h3 style={{fontSize:15,fontWeight:600,margin:"0 0 8px",color:"#eef2f8",lineHeight:1.3}}>{card.title}</h3>
+                    <p style={{fontSize:12.5,color:"#5a7090",margin:0,lineHeight:1.65}}>{card.desc}</p>
+                    {open&&<div style={{marginTop:14,paddingTop:12,borderTop:`1px solid ${card.color}25`,display:"flex",gap:8,alignItems:"flex-start"}}>
+                      <span style={{fontSize:14,flexShrink:0,marginTop:1}}>💡</span>
+                      <p style={{fontSize:12,color:"#8aaac8",margin:0,lineHeight:1.65,fontStyle:"italic"}}>{card.tip}</p>
+                    </div>}
+                  </div>
+                );
+              })}
+            </div>
+            <p style={{textAlign:"center",fontSize:10,color:"#1e2d42",marginTop:20,letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Tap any card to reveal the practical tip</p>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
